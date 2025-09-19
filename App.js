@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import restaurantsData from './restaurants.json'
 
 //React element was very clumsy to write and so the facebook developers created JSX.
 
@@ -19,21 +20,7 @@ const number = 1000;
 //React Components
 //Class based components and Functional Components (two types of components in react)
 
-const HeadingComponenent = () => {
-    return (
-        <div>
-        {jsxHeading}
-        {number}
-        {TitleComponent()}
-    <h1>Namaste React functional component</h1>
-    </div>
-    );
-}
-
-const TitleComponent = () => {
-    return <h2>I am a react title</h2>
-}
-
+console.log(restaurantsData, 'restaurant data');
 
 const Header = () => {
     return(
@@ -59,17 +46,21 @@ const styleCard = {
 
 }
 
-const RestaurantCard = () => {
+const mediaLink = 'https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/'
+
+const RestaurantCard = (props) => {
+    console.log(props);
+    const {cloudinaryImageId, name, cuisines, avgRating } = props.resList.info;
     return(
         <div className='restaurantCard' style={styleCard}>
         <img 
         className='restaurantImage'
         alt='res-image'
-        src='https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/RX_THUMBNAIL/IMAGES/VENDOR/2024/12/14/c6faebc3-727d-4fc1-b0b4-7e9df5dd757b_558222.jpg' />
-        <h3>Geetham Veg Restaurant</h3>
-        <h4>South Indian, North Indian, Chinese</h4>
-        <h4>4.7 Stars</h4>
-        <h4>25 Mins</h4>
+        src={mediaLink + cloudinaryImageId} />
+        <h3>{name}</h3>
+        <h4>{cuisines.join(', ')}</h4>
+        <h4>{avgRating} Stars</h4>   
+        <h4>{props.resList.info.sla.deliveryTime} mins</h4>
         </div>
     )
 }
@@ -79,18 +70,13 @@ const Body = () => {
         <div className='body'>
             <div className='search'>Search</div>
             <div className='restaurantContainer'>
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-
+                {
+                    restaurantsData.restaurants.map(restaurant => {
+                        return (
+                        <RestaurantCard key={restaurant.info.id} resList={restaurant} />
+                    )
+                    })
+                }
             </div>
         </div>
     )
