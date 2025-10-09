@@ -1,49 +1,64 @@
-.header{
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid orange;
-    font-family: sans-serif;
+.header {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid orange;
+  font-family: sans-serif;
 }
 
-.logoImage{
-    width: 145px;
-    cursor: pointer;
+.logoImage {
+  width: 145px;
+  cursor: pointer;
 }
 
-.nav-items{
-    padding: 0px 25px;
-
+.nav-items {
+  padding: 0px 25px;
 }
 
 .nav-items > ul {
-    display: flex;
-    list-style-type: none;
-    font-size: 30px;
+  display: flex;
+  list-style-type: none;
+  font-size: 30px;
 }
 
 .nav-items > ul > li {
-    padding: 10px;
-    margin: 10px;
-    cursor: pointer;
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
 }
 
-.restoCardContainer{
-    display: flex;
-    flex-wrap: wrap;
+.restoCardContainer {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-.restoCard:hover{
-    cursor: pointer;
-    border: 1px solid orange;
+.restoCard:hover {
+  cursor: pointer;
+  border: 1px solid orange;
 }
 
-.restoCard{
-    margin: 10px;
-    width: 200px;
-    padding: 10px;
-    font-family: sans-serif;
+.restoCard {
+  margin: 10px;
+  width: 200px;
+  padding: 10px;
+  font-family: sans-serif;
 }
 .restoImage {
-    width: 100%;
-    height: 50%;
+  width: 100%;
+  height: 50%;
+}
+
+.filter-btn {
+  padding: 10px;
+}
+
+.shimmerContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.shimmerCard {
+  width: 200px;
+  height: 375px;
+  margin: 20px;
+  background: #f0f0f0;
 }
