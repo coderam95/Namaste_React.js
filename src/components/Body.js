@@ -5,6 +5,9 @@ import { use, useEffect, useState } from "react";
 
 const Body = () => {
   const [listOfRestaurants, setListofRestaurants] = useState([]);
+  const [searchText, setSearchText] = useState("");
+
+  console.log("body rendered");
 
   useEffect(() => {
     fetchData();
@@ -24,14 +27,37 @@ const Body = () => {
     );
   };
 
-  if (listOfRestaurants.length === 0) {
-    return <Shimmer />;
-  }
-  // Local state variable - super powerful variable
-
-  return (
+  //conditional rendering
+  return listOfRestaurants.length === 0 ? (
+    <Shimmer />
+  ) : (
     <div className="body">
       <div className="filter">
+        <div className="search">
+          <input
+            type="text"
+            className="searchBox"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e.target.value);
+            }}
+          />
+          <button
+            onClick={() => {
+              //filter the restaurant cards and apply in the ui
+
+              console.log(searchText, "searchText");
+
+              const filteredRes = listOfRestaurants.filter((res) =>
+                res.info.name.toLowerCase().includes(searchText.toLowerCase())
+              );
+
+              setListofRestaurants(filteredRes);
+            }}
+          >
+            Search
+          </button>
+        </div>
         <button
           className="filter-btn"
           onClick={() => {
