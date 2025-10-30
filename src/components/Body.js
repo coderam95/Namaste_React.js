@@ -1,34 +1,49 @@
 import RestaurantCard from "./RestaurantCard";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 
 const Body = () => {
   const [listOfRestaurants, setListofRestaurants] = useState([]);
   const [filteredRes, setFilteredRes] = useState([]);
   const [searchText, setSearchText] = useState("");
+  const [mealImages, setMealImages] = useState([]);
 
   console.log("body rendered");
 
   useEffect(() => {
     fetchData();
+    fetchMealImages();
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.872589376447683&lng=80.20514437766997&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    );
+    const data = await fetch("https://namastedev.com/api/v1/listRestaurants");
 
     const json = await data.json();
 
     console.log(json, "json object");
     //Optional chaining
     setListofRestaurants(
-      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+      json?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants
     );
 
     setFilteredRes(
-      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants
+      json?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants
     );
+  };
+
+  const fetchMealImages = async () => {
+    const res = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/search.php?s="
+    );
+    const data = await res.json();
+
+    if (data?.meals) {
+      const firstNine = data.meals.slice(0, 9).map((meal) => meal.strMealThumb);
+      setMealImages(firstNine);
+    }
   };
 
   //conditional rendering
@@ -76,9 +91,19 @@ const Body = () => {
         </button>
       </div>
       <div className="restaurantContainer">
-        {filteredRes.map((restaurant) => {
+        {filteredRes.map((restaurant, index) => {
+          const imageUrl =
+            mealImages.length > 0
+              ? mealImages[index % mealImages.length]
+              : "https://via.placeholder.com/200";
+
           return (
-            <RestaurantCard key={restaurant.info.id} resList={restaurant} />
+            <Link
+              key={restaurant.info.id}
+              to={"/restaurant/" + restaurant.info.id}
+            >
+              <RestaurantCard resList={restaurant} imageUrl={imageUrl} />
+            </Link>
           );
         })}
       </div>
