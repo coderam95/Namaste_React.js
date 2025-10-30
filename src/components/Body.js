@@ -1,53 +1,61 @@
-import RestaurantData from "../utils/restaurants.json";
 import RestoCard from "./RestoCard";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 
 const Body = () => {
-  const [restaurants, setRestaurants] = useState([]);
+  const [listOfRestaurants, setListofRestaurants] = useState([]);
   const [filteredRes, setFilteredRes] = useState([]);
-
   const [searchText, setSearchText] = useState("");
+  const [mealImages, setMealImages] = useState([]);
+
+  console.log("body rendered");
 
   useEffect(() => {
     fetchData();
+    fetchMealImages();
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(
-      "https://www.swiggy.com/dapi/restaurants/list/v5?lat=12.872589376447683&lng=80.20514437766997&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-    );
+    const data = await fetch("https://namastedev.com/api/v1/listRestaurants");
 
-    const jsonify = await data.json();
+    const json = await data.json();
 
-    console.log(jsonify, "jsonify");
-
-    setRestaurants(
-      jsonify?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+    console.log(json, "json object");
+    //Optional chaining
+    setListofRestaurants(
+      json?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants
     );
+
     setFilteredRes(
-      jsonify?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+      json?.data?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants
     );
   };
 
-  if (restaurants.length === 0) {
-    return <Shimmer />;
-  }
+  const fetchMealImages = async () => {
+    const res = await fetch(
+      "https://www.themealdb.com/api/json/v1/1/search.php?s="
+    );
+    const data = await res.json();
 
-  const handleFilter = () => {
-    console.log("button clicked");
-    const filteredRes = restaurants.filter((res) => res.info.avgRating > 4.4);
-    setRestaurants(filteredRes);
+    if (data?.meals) {
+      const firstNine = data.meals.slice(0, 9).map((meal) => meal.strMealThumb);
+      setMealImages(firstNine);
+    }
   };
 
-  return (
+  //conditional rendering
+  return filteredRes.length === 0 ? (
+    <Shimmer />
+  ) : (
     <div className="body">
-      <div className="filter-btn">
+      <div className="filter">
         <div className="search">
           <input
-            className="searchbox"
+            type="text"
+            className="searchBox"
             value={searchText}
             onChange={(e) => {
               setSearchText(e.target.value);
@@ -55,23 +63,48 @@ const Body = () => {
           />
           <button
             onClick={() => {
-              const filtered = restaurants.filter((restaurant) =>
-                restaurant.info.name
-                  .toLowerCase()
-                  .includes(searchText.toLowerCase())
+              //filter the restaurant cards and apply in the ui
+
+              console.log(searchText, "searchText");
+
+              const filteredRest = listOfRestaurants.filter((res) =>
+                res.info.name.toLowerCase().includes(searchText.toLowerCase())
               );
 
-              setFilteredRes(filtered);
+              setFilteredRes(filteredRest);
             }}
           >
             Search
           </button>
         </div>
-        <button onClick={handleFilter}>Top rated restaurants</button>
+        <button
+          className="filter-btn"
+          onClick={() => {
+            //filter logic
+            const filteredList = filteredRes.filter(
+              (res) => res.info.avgRating > 4.3
+            );
+            setFilteredRes(filteredList);
+          }}
+        >
+          Top rated restaurants
+        </button>
       </div>
-      <div className="restoCardContainer">
-        {filteredRes.map((restaurant) => {
-          return <RestoCard key={restaurant.info.id} resList={restaurant} />;
+      <div className="restaurantContainer">
+        {filteredRes.map((restaurant, index) => {
+          const imageUrl =
+            mealImages.length > 0
+              ? mealImages[index % mealImages.length]
+              : "https://via.placeholder.com/200";
+
+          return (
+            <Link
+              key={restaurant.info.id}
+              to={"/restaurant/" + restaurant.info.id}
+            >
+              <RestoCard resList={restaurant} imageUrl={imageUrl} />
+            </Link>
+          );
         })}
       </div>
     </div>
