@@ -72,3 +72,8 @@
   display: flex;
   margin: 10px;
 }
+
+.userCard {
+  border: 1px solid black;
+  padding: 20px;
+}
