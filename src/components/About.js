@@ -19,6 +19,8 @@ class About extends Component {
         <h1>About</h1>
         <h2>This is swiggy trial website</h2>
         <UserClass name={"Akshay (class)"} location={"Dehradun"} />
+        <UserClass name={"Hariram (class)"} location={"OMR"} />
+        <UserClass name={"Neeraja (class)"} location={"OMR"} />
       </div>
     );
   }
