@@ -2,12 +2,14 @@ import RestoCard from "./RestoCard";
 import React, { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Body = () => {
   const [listOfRestaurants, setListofRestaurants] = useState([]);
   const [filteredRes, setFilteredRes] = useState([]);
   const [searchText, setSearchText] = useState("");
   const [mealImages, setMealImages] = useState([]);
+  const onlineStatus = useOnlineStatus();
 
   console.log("body rendered");
 
@@ -45,6 +47,12 @@ const Body = () => {
       setMealImages(firstNine);
     }
   };
+
+  if (onlineStatus === false) {
+    return (
+      <h1>You seem to be offline. Please check your internet connection</h1>
+    );
+  }
 
   //conditional rendering
   return filteredRes.length === 0 ? (

@@ -1,9 +1,11 @@
 import { LOGO_URL } from "../utils/constants";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 const Header = () => {
   const [buttonName, setButtonName] = useState("Login");
+  const onlineStatus = useOnlineStatus();
 
   useEffect(() => {
     console.log("use effect called only when buttonName changes");
@@ -18,6 +20,7 @@ const Header = () => {
       </Link>
       <div className="nav-items">
         <ul>
+          <li>Online: {onlineStatus ? "🟢" : "🔴"}</li>
           <li>
             <Link to="/">Home</Link>
           </li>
